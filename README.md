@@ -3,27 +3,29 @@ This is the meta compiler for Peace Engine 3.
 It generates serialization and reflection code for C++ code automatically.
 ## Build
 ### Windows
-The following steps demonstrate how to use command line cmake and MSBuild to build metaCompiler.exe
+The following steps demonstrate how to use command line cmake and MSBuild to build metaCompiler.exe.
 Note that you can also use cmake-gui.exe instead of command line cmake to generate the VS solutions,
 In addition you can open the generated .sln with Visual studio to build and debug them.
 
 1. Clone and build LLVM.
 
+```sh
    git clone https://github.com/llvm/llvm-project.git
    mkdir llvm-build
    cd llvm-build
    cmake ../llvm-project/llvm -DLLVM_EXTERNAL_CLANG_SOURCE_DIR=../llvm-project/clang -DCMAKE_BUILD_TYPE="RelWithDebInfo"
    cmake --build . --config "RelWithDebInfo"
    cd ..
-
+```
 2. Clone and build MetaCompiler
 
+```sh
    git clone https://github.com/thatname/MetaCompiler.git
    mkdir MetaCompiler-build
    cd MetaCompiler-build
    cmake ../MetaCompiler -DLLVM_GIT=../llvm-project -DLLVM_BUILD=../llvm-build -DCMAKE_BUILD_TYPE="RelWithDebInfo"
    cmake --build . --config "RelWithDebInfo"
-   
+```   
 
 
 ### Other OS
