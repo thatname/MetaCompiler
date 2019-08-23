@@ -149,11 +149,17 @@ public:
 			}
 			filehead << "nullptr};";*/
 
-
+			if (d.second.dynamicNonAbstract)
+				filehead << "pe3_VTABLE("<< d.second.vtableName << ",\""<< d.second.msVTableName << "\")\n";
 
 			filehead << " ClassDescType ClassDescTmpl<" << d.first << ">::desc = {sizeof(" << d.first << "), ";
 
-			filehead << basesCountBuffer << "," << d.second.hasEnumerator << ", \"" << d.first << "\",\"" << d.second.shortName << "\", nullptr, pe3_MEMBER_ENUMERATORS(__MEMBER_ENUMERATOR_OP_DEFINE," << d.first << ", void)";
+			filehead << basesCountBuffer << "," << d.second.hasEnumerator << ", \"" << d.first << "\",\"" << d.second.shortName << "\", ";
+			if (d.second.dynamicNonAbstract)
+				filehead << d.second.vtableName;
+			else
+				filehead << "nullptr";
+			filehead << ", pe3_MEMBER_ENUMERATORS(__MEMBER_ENUMERATOR_OP_DEFINE," << d.first << ", void)";
 			if(d.second.bases.empty())
 				filehead << "nullptr,";
 			else
@@ -219,9 +225,9 @@ public:
 			filehead << "classDescByName[\"" << d.first << "\"]=&ClassDescTmpl<" << d.first << ">::desc;\n";
 			if (d.second.dynamicNonAbstract)
 			{
-				filehead << "{\n#ifdef WIN32\nvoid *dummy = (void*)__identifier(\"" << d.second.msVTableName << "\");\n#else\nextern\"C\"void*" << d.second.vtableName << ";void*dummy= " << d.second.vtableName << ";\n#endif\n"
-						<< "\n ClassDescTmpl<" << d.first << ">::desc.vptr = dummy;\n";
-				filehead << "classDescByVptr[dummy]=&ClassDescTmpl<" << d.first << ">::desc;}\n";
+				//filehead << "{\n#ifdef WIN32\nvoid *dummy = (void*)__identifier(\"" << d.second.msVTableName << "\");\n#else\nextern\"C\"void*" << d.second.vtableName << ";void*dummy= " << d.second.vtableName << ";\n#endif\n"
+				//		<< "\n ClassDescTmpl<" << d.first << ">::desc.vptr = dummy;\n";
+				filehead << "classDescByVptr[ClassDescTmpl<" << d.first << ">::desc.vptr]=&ClassDescTmpl<" << d.first << ">::desc;\n";
 			}
 		}
 		filehead << "}\n";
