@@ -62,7 +62,7 @@ bool MetaCompileASTConsumer::HandleTopLevelDecl(clang::DeclGroupRef DR)
 		for (auto &WorkingDir : sourceDirs)
 		{
 			//auto WorkingDir = _ci->getFileSystemOpts().WorkingDir;
-			std::string str = name.substr(0, WorkingDir.size());
+			std::string str = name.substr(0, WorkingDir.size()).str();
 
 			std::transform(str.begin(), str.end(), str.begin(), myTolower);
 			std::transform(WorkingDir.begin(), WorkingDir.end(), WorkingDir.begin(), myTolower);

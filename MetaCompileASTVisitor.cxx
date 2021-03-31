@@ -169,7 +169,7 @@ bool MetaCompileASTVisitor::needRegisterType(clang::TagDecl * R)
 		cont:continue;
 		normal:
 			memberCount++;
-			std::string name = C->getName();
+			auto name = C->getName();
 			//const auto& oldpolicy = R->getParentASTContext().getPrintingPolicy();
 			//clang::PrintingPolicy policy = oldpolicy.LangOpts;
 			std::string type;// = C->getType()./*.getTypePtrOrNull()->getCanonicalTypeInternal().*/getAsString(R->getParentASTContext().getPrintingPolicy());
@@ -233,7 +233,7 @@ bool MetaCompileASTVisitor::needRegisterType(clang::TagDecl * R)
 		//	memberCount = 1;
 		
 		
-		gen << R"~(pe3_MEMBER_ENUMERATORS(pe3_MEMBER_ENUMERATION_DEFINE, )~"
+		gen << R"~(PE3_MEMBER_ENUMERATORS(PE3_MEMBER_ENUMERATION_DEFINE, )~"
 			<< name
 			<< R"~(,
 if(__MEMBER_ENUMERATOR__.structBegin(")~" << name << "\", ";
@@ -367,7 +367,7 @@ if(__MEMBER_ENUMERATOR__.structBegin(")~" << name << "\", ";
 			auto b = I->getAnnotation();
 			if (b.substr(0, 8) == "__META__")
 			{
-				std::string str = b.substr(8);
+				std::string str = b.str().substr(8);
 
 				int t = 0;
 				for (; t < str.size(); t++)
@@ -420,7 +420,7 @@ if(__MEMBER_ENUMERATOR__.structBegin(")~" << name << "\", ";
 		if (it != _action.typesToStore.end())
 			return;
 		auto & s = _action.typesToStore[r];
-		s.shortName = R->getName();
+		s.shortName = R->getName().str();
 		
 		if (needSerial)
 			s.hasEnumerator = "true";
@@ -533,7 +533,7 @@ if(__MEMBER_ENUMERATOR__.structBegin(")~" << name << "\", ";
 			for (auto t = D->field_begin(); t != D->field_end(); ++t)			//now iterate all fields..
 			{
 				const Type * type = t->getType().getTypePtrOrNull();
-				std::string vName = t->getName();
+				std::string vName = t->getName().str();
 				auto tName = t->getType().getAsString(D->getParentASTContext().getPrintingPolicy());
 				if (!type->isReferenceType() && !type->isRValueReferenceType())
 					tName += "&";
@@ -602,7 +602,7 @@ if(__MEMBER_ENUMERATOR__.structBegin(")~" << name << "\", ";
 				{
 					MetaCompileAction::EnumToStoreUnit::enumValue v;
 					v.value = (int)(*(it->getInitVal().getRawData()));
-					v.name = it->getName();
+					v.name = it->getName().str();
 					e.values.push_back(v);
 				}
 			end:;

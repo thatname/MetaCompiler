@@ -150,8 +150,8 @@ public:
 			filehead << "nullptr};";*/
 
 			if (d.second.dynamicNonAbstract)
-				filehead << "pe3_VTABLE("<< d.second.vtableName << ",\""<< d.second.msVTableName << "\")\n";
-
+				filehead << "PE3_VTABLE("<< d.second.vtableName << ",\""<< d.second.msVTableName << "\")\n";
+				
 			filehead << " ClassDescType ClassDescTmpl<" << d.first << ">::desc = {sizeof(" << d.first << "), ";
 
 			filehead << basesCountBuffer << "," << d.second.hasEnumerator << ", \"" << d.first << "\",\"" << d.second.shortName << "\", ";
@@ -159,7 +159,7 @@ public:
 				filehead << d.second.vtableName;
 			else
 				filehead << "nullptr";
-			filehead << ", pe3_MEMBER_ENUMERATORS(__MEMBER_ENUMERATOR_OP_DEFINE," << d.first << ", void)";
+			filehead << ",PE3_MEMBER_ENUMERATORS(__MEMBER_ENUMERATOR_OP_DEFINE," << d.first << ", void)";
 			if(d.second.bases.empty())
 				filehead << "nullptr,";
 			else
@@ -235,7 +235,7 @@ public:
 		for(auto& d : forwardDecl)
 			//if (dontforwardDecl.find(d) == dontforwardDecl.end())
 			{
-				header << R"~(pe3_MEMBER_ENUMERATORS(pe3_MEMBER_ENUMERATION_DECLARE,)~" << d << R"~(, void)
+				header << R"~(PE3_MEMBER_ENUMERATORS(PE3_MEMBER_ENUMERATION_DECLARE,)~" << d << R"~(, void)
 )~";
 			}
 		header << "}\n";
@@ -258,7 +258,7 @@ public:
 			header << "#include <" << file.substr(std::min(file.find_last_of('/'), file.find_last_of('\\')) + 1)/*file.substr(CI.getFileSystemOpts().WorkingDir.size()) */<< ">\n";
 
 			TheRewriter.setSourceMgr(CI.getSourceManager(), CI.getLangOpts());
-			return llvm::make_unique<MetaCompileASTConsumer>(&TheRewriter, &CI, /*file,*/ *this);
+			return std::make_unique<MetaCompileASTConsumer>(&TheRewriter, &CI, /*file,*/ *this);
 			//return new MetaCompileASTConsumer(&TheRewriter, &CI, file);
 	}
 
