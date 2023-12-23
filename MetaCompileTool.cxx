@@ -37,22 +37,22 @@
 using namespace clang::driver;
 using namespace clang::tooling;
 using namespace llvm;
-cl::OptionCategory ClangCheckCategory("metaCompiler");
+cl::OptionCategory MetaCompilerCategory("metaCompiler");
 
 cl::opt<std::string> GeneratedFileName(
 	"generated-file-name",
 	cl::desc("specifie the generated file name without extension"),
-	cl::cat(ClangCheckCategory));
+	cl::cat(MetaCompilerCategory));
 
 cl::opt<std::string> defaultGenerateDir(
 	"default-generate-dir",
 	cl::desc("specifie the dir contains all file defaulted to generate serializer"),
-	cl::cat(ClangCheckCategory));
+	cl::cat(MetaCompilerCategory));
 
 cl::opt<std::string> projectDir(
 	"project-dir",
 	cl::desc("specifie the project dir"),
-	cl::cat(ClangCheckCategory));
+	cl::cat(MetaCompilerCategory));
 
 
 
@@ -61,28 +61,22 @@ cl::opt<std::string> projectDir(
 //cl::opt<bool> popupModale(
 //	"popup-modale",
 //	cl::desc("show popup modale"),
-//	cl::cat(ClangCheckCategory));
+//	cl::cat(MetaCompilerCategory));
 //#endif
 //test option like this :"d:/test.h -- -x c++"
+class MyOoptionParser : public CommonOptionsParser
+{
+
+};
 int main(int argc, const char **argv) {
-	CommonOptionsParser op(argc, argv, ClangCheckCategory);
-//#ifdef _WIN32
-//	if (popupModale)
-//	{
-//		if (MessageBoxA(GetDesktopWindow(), (std::string("是否重新生成序列化代码:") + GeneratedFileName + ".gen.cxx").c_str(), "头文件已经更改", MB_YESNO | MB_DEFBUTTON2) == IDNO)
-//		{
-//			return 0;
-//		}
-//	}
-//#endif
-	//if (argc < 2)
-	//{
-	//	const char* _argv[] = { argv[0], "D:/MetaCompiler/proj/test.h","-generated-file-name=gen", "--", "-x", "c++", "-working-directory=D:/MetaCompiler/proj/" };
-	//	int _argc = 7;
-	//	CommonOptionsParser op(_argc, _argv, ClangCheckCategory);
-	//}
-	ClangTool Tool(op.getCompilations(), op.getSourcePathList());
-	int result = Tool.run(newFrontendActionFactory<MetaCompileAction>().get());
+	auto optionParser = CommonOptionsParser::create(
+		argc, argv, MetaCompilerCategory, llvm::cl::OneOrMore,
+		"Generating reflection metadata.");
+	if (optionParser)
+	{
+		ClangTool Tool(optionParser->getCompilations(), optionParser->getSourcePathList());
+		int result = Tool.run(newFrontendActionFactory<MetaCompileAction>().get());
+	}
 	return 0;
 	//return result;
 }

@@ -42,11 +42,11 @@ char myTolower(char in) {
 using namespace clang::driver;
 using namespace clang::tooling;
 using namespace llvm;
-extern cl::OptionCategory ClangCheckCategory;
+extern cl::OptionCategory MetaCompilerCategory;
 cl::list<std::string> sourceDirs(
 	"source-dirs",
 	cl::desc("specifie the sources"),
-	cl::cat(ClangCheckCategory), cl::CommaSeparated);
+	cl::cat(MetaCompilerCategory), cl::CommaSeparated);
 bool MetaCompileASTConsumer::HandleTopLevelDecl(clang::DeclGroupRef DR)
 {
 	using namespace clang;
